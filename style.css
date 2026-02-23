@@ -1,0 +1,990 @@
+:root {
+  --night-sky: #090a0f;
+  --dark-forest: #10121a;
+  --moonlight: rgba(160, 200, 255, 0.4);
+  --torch: #ff9d00;
+  --gold: #d4af37;
+  --text-main: #e0e0e0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--night-sky);
+  color: var(--text-main);
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Lora', serif;
+}
+
+/* Typography Helpers */
+.cinzel {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 1px;
+}
+
+.lora {
+  font-family: 'Lora', serif;
+  line-height: 1.6;
+}
+
+.glow-text {
+  animation: pulseGlow 2s infinite alternate;
+  cursor: pointer;
+}
+
+.pulse-slow {
+  animation: pulseGlow 4s infinite alternate ease-in-out;
+}
+
+.start-text {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 3px;
+  cursor: pointer;
+}
+
+.gold {
+  color: var(--gold);
+}
+
+.highlight {
+  font-size: 3rem;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+/* Viewport management */
+#app {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  /* hidden until active */
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.full-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-dark {
+  background-color: var(--night-sky);
+}
+
+/* Cinematic Scene Container */
+.cinematic {
+  display: flex;
+  flex-direction: column;
+}
+
+.background {
+  flex: 4;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 -50px 50px var(--night-sky);
+  /* smooth fade to text */
+}
+
+/* IMAGE LAYERS */
+.img-layer {
+  position: absolute;
+  top: -5%;
+  left: -5%;
+  width: 110%;
+  height: 110%;
+  background-size: cover;
+  background-position: center top;
+  /* menggeser fokus ke atas, menghilangkan watermark di dasar laut */
+  opacity: 0;
+  z-index: 1;
+}
+
+.subtitle-box {
+  flex: 1;
+  padding: 2rem 2rem 5rem 2rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  z-index: 10;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  text-align: left;
+  color: #fff;
+  min-height: 2em;
+  width: 85%;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 0, 0, 1), 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+/* Hide Typewriter Cursor to make it look less robotic */
+.Typewriter__cursor {
+  display: none !important;
+}
+
+/* Scene 7: Torn Folded Parchment (Ancient Kingdom Style) */
+.royal-parchment {
+  position: relative;
+  width: 380px;
+  min-height: 200px;
+  /* Kertas lusuh kerajaan */
+  background: linear-gradient(135deg, #e3cfa0 0%, #d1b782 50%, #b89c62 100%);
+  border: 1px solid #8c713b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(92, 58, 33, 0.6);
+  /* EFEK SOBEKAN DI PINGGIRAN (Random jagged edges) */
+  clip-path: polygon(0% 2%, 2% 0%, 6% 2%, 12% 0%, 18% 3%, 25% 0%, 35% 2%, 45% 0%,
+      55% 2%, 65% 0%, 75% 3%, 85% 0%, 94% 2%, 98% 0%, 100% 3%,
+      98% 12%, 100% 22%, 97% 32%, 100% 45%, 98% 55%, 100% 65%, 97% 75%,
+      100% 85%, 98% 95%, 100% 98%,
+      98% 100%, 94% 98%, 85% 100%, 75% 97%, 65% 100%, 55% 98%, 45% 100%,
+      35% 97%, 25% 100%, 18% 98%, 12% 100%, 6% 98%, 2% 100%, 0% 98%,
+      2% 90%, 0% 80%, 3% 70%, 0% 60%, 2% 50%, 0% 40%, 3% 30%, 0% 20%, 2% 10%, 0% 2%);
+  border-radius: 2px;
+}
+
+/* Lipatan Kertas (Fold) membungkuk ke bawah */
+.parchment-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 110px;
+  background: linear-gradient(to bottom, #d1b782 0%, #a88d52 100%);
+  border-bottom: 2px dashed rgba(92, 58, 33, 0.4);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+  transform-origin: top;
+  /* GSAP akan mengubah rotasi Y ini untuk animasi ngebuka */
+}
+
+.parchment-content {
+  padding: 4rem 2rem 2rem 2rem;
+  /* Ruang untuk lipatan flap ditaruh di atas */
+  z-index: 1;
+}
+
+.letter-text {
+  font-family: 'Lora', serif;
+  /* Menggunakan Lora agar mirip tulisan tangan Latin */
+  font-style: italic;
+  font-size: 1.15rem;
+  color: #382414;
+  /* Tinta coklat tua (sepia) */
+  text-align: center;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.royal-btn {
+  margin-top: 40px;
+  padding: 12px 30px;
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: 0.3s;
+}
+
+.royal-btn:hover {
+  background: rgba(212, 175, 55, 0.1);
+}
+
+/* Scene 8: Candle  */
+.candle-container {
+  height: 180px;
+  display: flex;
+  align-items: flex-end;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.candle {
+  width: 30px;
+  height: 140px;
+  background: linear-gradient(to bottom, #d6d3c4, #8b897d);
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  box-shadow: inset -5px 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.candle::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 10px;
+  background: #222;
+  border-radius: 2px;
+}
+
+.flame {
+  position: absolute;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 35px;
+  background: radial-gradient(ellipse at bottom, #fff 10%, #ffde6a 50%, #ff9c2a 80%, transparent 100%);
+  border-radius: 50% 50% 20% 20%;
+  box-shadow: 0 0 20px #ffde6a, 0 0 50px #ff9c2a;
+  animation: flicker 1.5s infinite ease-in-out alternate;
+  z-index: 2;
+  transition: 0.5s;
+}
+
+.flame.out {
+  animation: extinguish 0.5s forwards !important;
+}
+
+@keyframes extinguish {
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0) rotate(20deg);
+  }
+}
+
+.glow {
+  position: absolute;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 200, 100, 0.15) 0%, transparent 60%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  animation: pulseGlow 3s infinite alternate;
+}
+
+.flame.out+.glow {
+  animation: none !important;
+  opacity: 0 !important;
+  transition: opacity 0.5s;
+}
+
+.smoke {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 80px;
+  background: linear-gradient(to top, rgba(200, 200, 200, 0.4), transparent);
+  border-radius: 50%;
+  filter: blur(5px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.smoke.active {
+  animation: floatUp 3s ease-out forwards;
+}
+
+.minimal-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ccc;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: 'Lora';
+  transition: 0.3s;
+}
+
+.minimal-btn:hover {
+  border-color: #fff;
+  color: #fff;
+}
+
+/* Final Interactive Royal Scroll (Scene 9) */
+#scene-9 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: rgba(5, 5, 5, 0.9);
+  flex-direction: column;
+  overflow-y: auto;
+  /* Allow the page to natively scroll */
+  overflow-x: hidden;
+  padding: 50px 0 100px 0;
+}
+
+.scroll-wrapper {
+  position: relative;
+  width: 90%;
+  max-width: 650px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+  margin: auto 0;
+  /* Auto margin centers it when it's smaller than the screen */
+}
+
+.scroll-roller {
+  width: 105%;
+  height: 35px;
+  background: linear-gradient(to bottom, #b48645, #5f3e1a, #b48645);
+  border: 2px solid #36220e;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8), inset 0 2px 5px rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: 12;
+}
+
+.scroll-roller.top-roller {
+  margin-bottom: -15px;
+  /* overlap slightly with paper */
+}
+
+.scroll-roller.bottom-roller {
+  margin-top: -15px;
+  cursor: grab;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scroll-roller.bottom-roller:active {
+  cursor: grabbing;
+}
+
+.drag-hint {
+  font-family: 'Cinzel', serif;
+  color: #ffde6a;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+  animation: bounceHint 1.5s infinite;
+  transition: opacity 0.3s;
+}
+
+@keyframes bounceHint {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+.scroll-body {
+  height: 180px;
+  /* Initially only showing title */
+  overflow: hidden;
+  width: 100%;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.95);
+  position: relative;
+  z-index: 11;
+  background: linear-gradient(135deg, #e3cfa0 0%, #ecdba7 50%, #d8be86 100%);
+  border-left: 4px double #8c713b;
+  border-right: 4px double #8c713b;
+}
+
+.royal-scroll {
+  width: 100%;
+  padding: 3rem 2.5rem 2rem 2.5rem;
+  box-sizing: border-box;
+}
+
+.title-scroll {
+  font-size: 1.3rem;
+  letter-spacing: 3px;
+  color: #382414;
+  /* Coklat tua khas tinta tua */
+}
+
+/* Override the universal gold to be dark tint inside the scroll */
+.royal-scroll .highlight {
+  color: #5a0707;
+  /* Merah darah tua elegan untuk nama Marsya */
+  font-size: 2.2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-divider {
+  width: 150px;
+  height: 2px;
+  background: #8c713b;
+  margin: 0 auto 30px auto;
+  position: relative;
+}
+
+.scroll-divider::after {
+  content: "♦";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #8c713b;
+  background: #e3cfa0;
+  padding: 0 10px;
+  font-size: 20px;
+}
+
+.scroll-text {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #382414;
+  /* Tinta coklat tua (sepia) */
+  font-weight: 500;
+}
+
+.date-signature {
+  font-family: 'Cinzel', serif;
+  color: #5c3a21;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+canvas#particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Keyframes */
+@keyframes flicker {
+  0% {
+    transform: translateX(-50%) scale(1) rotate(-1deg);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.05) rotate(1deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(-50%) scale(0.95) rotate(-1deg);
+    opacity: 0.8;
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    opacity: 0.6;
+    transform: translateX(-50%) scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.1);
+  }
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translate(-50%, 0) scale(1);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translate(-30%, -200px) scale(3);
+    opacity: 0;
+    filter: blur(15px);
+  }
+}
+
+/* Skip Button */
+.skip-btn {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'Lora', serif;
+  font-size: 0.9rem;
+  z-index: 1000;
+  transition: 0.3s;
+}
+
+.skip-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #fff;
+  color: #fff;
+}
+
+/* --- 3D Glorious Glass Flower --- */
+.anim-flower-container {
+  position: absolute;
+  top: 10%;
+  right: 15%;
+  /* diletakkan di pojok kanan atas bersinar */
+  width: 150px;
+  height: 150px;
+  z-index: 5;
+  pointer-events: none;
+  /* Biar ngga ganggu pas narik scroll */
+  animation: floatGlassFlower 5s infinite ease-in-out alternate;
+}
+
+.flower-1 {
+  top: 10%;
+  right: 15%;
+}
+
+/* Mengisi ruang kiri tengah */
+.flower-2 {
+  top: 70%;
+  left: 5%;
+  transform: scale(0.65);
+  animation-delay: 1.5s;
+  opacity: 0.8;
+}
+
+/* Mengisi ruang dalam & jauh di bawah ketika scroll ditarik full */
+.flower-3 {
+  top: 130%;
+  right: 10%;
+  transform: scale(0.85);
+  animation-delay: 3s;
+  opacity: 0.9;
+}
+
+/* Ubah posisi agar responsif di HP */
+@media screen and (max-width: 768px) {
+  .anim-flower-container {
+    opacity: 0.6;
+    /* Lebih redup di HP biar teks scroll tetap kebaca jelas */
+  }
+
+  .flower-1 {
+    top: 5%;
+    right: 5%;
+    transform: scale(0.8);
+  }
+
+  .flower-2 {
+    top: 60%;
+    left: -10%;
+    transform: scale(0.5);
+  }
+
+  .flower-3 {
+    top: 110%;
+    right: 0%;
+    transform: scale(0.7);
+  }
+}
+
+@keyframes floatGlassFlower {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    transform: translateY(-20px) scale(1.05);
+  }
+}
+
+.glass-flower {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(60deg) rotateZ(45deg);
+  /* Isometric perspective elegan */
+  animation: spinFlower 12s linear infinite;
+  filter: drop-shadow(0 0 30px rgba(200, 20, 20, 0.5));
+}
+
+@keyframes spinFlower {
+  0% {
+    transform: rotateX(60deg) rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateX(60deg) rotateZ(360deg);
+  }
+}
+
+.glass-petal,
+.glass-petal-inner {
+  position: absolute;
+  /* Membuat lengkungan kelopak bunga murni CSS */
+  border-radius: 5px 50% 5px 50%;
+  transform-origin: bottom right;
+}
+
+.glass-petal {
+  width: 60px;
+  height: 60px;
+  top: 15px;
+  left: 15px;
+  /* Warna kaca transparan gelap dengan border menyala */
+  background: rgba(140, 15, 15, 0.4);
+  border: 1px solid rgba(255, 100, 100, 0.6);
+  box-shadow: inset 0 0 20px rgba(184, 30, 30, 0.6), 0 0 10px rgba(184, 30, 30, 0.2);
+  backdrop-filter: blur(2px);
+}
+
+.glass-petal:nth-child(1) {
+  transform: rotateZ(0deg) rotateX(25deg);
+}
+
+.glass-petal:nth-child(2) {
+  transform: rotateZ(72deg) rotateX(25deg);
+}
+
+.glass-petal:nth-child(3) {
+  transform: rotateZ(144deg) rotateX(25deg);
+}
+
+.glass-petal:nth-child(4) {
+  transform: rotateZ(216deg) rotateX(25deg);
+}
+
+.glass-petal:nth-child(5) {
+  transform: rotateZ(288deg) rotateX(25deg);
+}
+
+.glass-petal-inner {
+  width: 40px;
+  height: 40px;
+  top: 25px;
+  left: 25px;
+  /* Bagian tengah bunga lebih merona dan solid */
+  background: rgba(220, 20, 20, 0.6);
+  border: 1px solid rgba(255, 120, 120, 0.8);
+  box-shadow: inset 0 0 15px rgba(255, 50, 50, 0.8), 0 0 30px rgba(255, 0, 0, 0.4);
+}
+
+.glass-petal-inner:nth-child(6) {
+  transform: rotateZ(36deg) rotateX(45deg);
+}
+
+.glass-petal-inner:nth-child(7) {
+  transform: rotateZ(108deg) rotateX(45deg);
+}
+
+.glass-petal-inner:nth-child(8) {
+  transform: rotateZ(180deg) rotateX(45deg);
+}
+
+.glass-petal-inner:nth-child(9) {
+  transform: rotateZ(252deg) rotateX(45deg);
+}
+
+.glass-petal-inner:nth-child(10) {
+  transform: rotateZ(324deg) rotateX(45deg);
+}
+
+/* --- Batang dan Daun Kaca (Stem & Leaves) --- */
+.glass-stem {
+  position: absolute;
+  width: 12px;
+  height: 380px;
+  /* Jauh lebih panjang ke bawah */
+  /* Warna hijau kaca gelap nyala */
+  background: rgba(20, 80, 30, 0.5);
+  border-right: 2px solid rgba(100, 255, 100, 0.6);
+  border-left: 1px solid rgba(100, 255, 100, 0.3);
+  box-shadow: inset 0 0 15px rgba(30, 150, 50, 0.8), 0 0 20px rgba(30, 150, 50, 0.4);
+  top: 75px;
+  left: 69px;
+  /* Pas di tengah pusaran mahkota bunga (75 - 6) */
+  transform-origin: top center;
+  /* rotateX(-90deg) membuat dia menghujam lurus ke bawah di dunia 3D */
+  transform: translateZ(-10px) rotateX(-90deg);
+  border-radius: 6px;
+  transform-style: preserve-3d;
+  /* Turunkan properti 3D ke daun */
+}
+
+.glass-leaf {
+  position: absolute;
+  width: 55px;
+  /* Lebih besar */
+  height: 55px;
+  /* Lebih besar */
+  background: rgba(30, 90, 40, 0.4);
+  border: 1px solid rgba(100, 255, 100, 0.5);
+  box-shadow: inset 0 0 15px rgba(30, 150, 50, 0.6);
+  border-radius: 0 50% 0 50%;
+  /* Membuat efek bentuk ujung daun */
+  backdrop-filter: blur(2px);
+}
+
+.leaf-left {
+  top: 100px;
+  /* Nempel agak atas di batang */
+  left: -42px;
+  /* Menjulur ke kiri */
+  transform-origin: bottom right;
+  /* Ditekuk sedikit ke luar biar elegan, rotateZ bikin mengayun menjauh batang */
+  transform: rotateZ(-40deg) rotateX(20deg);
+}
+
+.leaf-right {
+  top: 200px;
+  /* Nempel agak bawah di batang */
+  left: 6px;
+  /* Menjulur ke kanan dari tengah batang */
+  transform-origin: bottom left;
+  transform: rotateZ(40deg) rotateX(20deg) scale(0.9);
+}
+
+/* --- THE MAGICAL VIGNETTE AURA --- */
+.magical-vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  /* Glow merah kegelapan dipinggir layar */
+  box-shadow: inset 0 0 150px rgba(100, 10, 10, 0.5);
+  animation: breathingAura 4s infinite alternate ease-in-out;
+}
+
+@keyframes breathingAura {
+  0% {
+    box-shadow: inset 0 0 100px rgba(80, 5, 5, 0.3);
+  }
+
+  100% {
+    box-shadow: inset 0 0 200px rgba(150, 15, 15, 0.7);
+  }
+}
+
+/* --- SHIMMERING GLOW TEXT UNTUK NAMA --- */
+.royal-scroll .highlight {
+  position: relative;
+  color: #5a0707;
+  font-size: 2.2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* Menambahkan efek kilau emas yang melintas di teks */
+  background: linear-gradient(to right,
+      #5a0707 20%,
+      #b48645 40%,
+      #ffde6a 50%,
+      #b48645 60%,
+      #5a0707 80%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shimmerText 5s linear infinite;
+}
+
+@keyframes shimmerText {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* --- PULSING ROLLERS GLOW --- */
+.scroll-roller {
+  animation: pulseRoller 3s infinite alternate ease-in-out;
+}
+
+@keyframes pulseRoller {
+  0% {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8), inset 0 2px 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(212, 175, 55, 0.2);
+  }
+
+  100% {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.9), inset 0 2px 5px rgba(255, 255, 255, 0.6), 0 0 25px rgba(212, 175, 55, 0.6);
+  }
+}
+
+/* --- MAGICAL FIREFLIES (KUNANG-KUNANG CSS) --- */
+.firefly {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: #ffde6a;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  box-shadow: 0 0 10px #ffde6a, 0 0 20px #ffde6a, 0 0 30px #d4af37;
+  animation: fireflyFloat 10s infinite linear, fireflyGlow 2s infinite alternate ease-in-out;
+}
+
+.firefly:nth-child(1) {
+  top: 80%;
+  left: 10%;
+  animation-duration: 8s, 1.5s;
+  animation-delay: 0s;
+}
+
+.firefly:nth-child(2) {
+  top: 20%;
+  left: 80%;
+  animation-duration: 12s, 2.5s;
+  animation-delay: 2s;
+}
+
+.firefly:nth-child(3) {
+  top: 50%;
+  left: 20%;
+  animation-duration: 9s, 2s;
+  animation-delay: 1s;
+}
+
+.firefly:nth-child(4) {
+  top: 90%;
+  left: 70%;
+  animation-duration: 11s, 1.8s;
+  animation-delay: 3s;
+}
+
+.firefly:nth-child(5) {
+  top: 10%;
+  left: 30%;
+  animation-duration: 13s, 2.2s;
+  animation-delay: 4s;
+}
+
+.firefly:nth-child(6) {
+  top: 60%;
+  left: 85%;
+  animation-duration: 10s, 1.9s;
+  animation-delay: 1.5s;
+}
+
+.firefly:nth-child(7) {
+  top: 40%;
+  left: 15%;
+  animation-duration: 14s, 2.1s;
+  animation-delay: 0.5s;
+}
+
+@keyframes fireflyFloat {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(30px, -40px) scale(1.2);
+  }
+
+  50% {
+    transform: translate(-20px, -80px) scale(0.9);
+  }
+
+  75% {
+    transform: translate(40px, -120px) scale(1.1);
+  }
+
+  100% {
+    transform: translate(0, -160px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes fireflyGlow {
+  0% {
+    opacity: 0.3;
+    box-shadow: 0 0 5px #ffde6a;
+  }
+
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 15px #ffde6a, 0 0 25px #d4af37;
+  }
+}
+
+/* ========================================================
+   FORCE LANDSCAPE OROMATIS UTK HP (PORTRAIT TO LANDSCAPE)
+   ======================================================== */
+@media screen and (orientation: portrait) {
+
+  html,
+  body {
+    overflow: hidden !important;
+  }
+
+  #app {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* Putar logic dimensi: Lebar jadi Tinggi layar HP, Tinggi jadi Lebar layar HP */
+    width: 100vh;
+    height: 100vw;
+    /* Putar paksa layarnya ke samping jadi mode Landscape game! */
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+}
