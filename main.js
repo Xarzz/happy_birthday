@@ -461,53 +461,6 @@ document.addEventListener('DOMContentLoaded', () => {
       { y: 50, scale: 0.95, opacity: 0 },
       { y: 0, scale: 1, opacity: 1, duration: 2.5, ease: "power2.out" }
     );
-
-    // Langsung mulai hujan percikan emas
-    startSparkles();
-  }
-
-  // --- Sparkle Particles System ---
-  const canvas = document.getElementById('particles');
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  let particlesArray = [];
-
-  window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  });
-
-  class Particle {
-    constructor() {
-      this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
-      this.size = Math.random() * 2 + 0.5;
-      this.speedY = Math.random() * -1; // drift up
-      this.speedX = Math.random() * 1 - 0.5;
-      this.baseColor = Math.random() > 0.5 ? '#d4af37' : '#ffffff';
-      this.opacity = Math.random();
-      this.life = Math.random() * 0.01 + 0.005;
-    }
-    update() {
-      this.y += this.speedY;
-      this.x += this.speedX;
-      this.opacity -= this.life;
-      if (this.opacity <= 0 || this.y < 0) {
-        this.y = canvas.height + 10;
-        this.x = Math.random() * canvas.width;
-        this.opacity = Math.random() * 0.5 + 0.5;
-      }
-    }
-    draw() {
-      ctx.fillStyle = this.baseColor;
-      ctx.globalAlpha = this.opacity;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
-    }
   }
 
   // --- Scroll Dragging Logic ---
@@ -575,21 +528,5 @@ document.addEventListener('DOMContentLoaded', () => {
   function stopScrollDrag(e) {
     if (!isDraggingScroll) return;
     isDraggingScroll = false;
-  }
-
-  function startSparkles() {
-    for (let i = 0; i < 80; i++) { particlesArray.push(new Particle()); }
-    animateSparkles();
-  }
-  function animateSparkles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Animate Gold Sparkles
-    for (let i = 0; i < particlesArray.length; i++) {
-      particlesArray[i].update();
-      particlesArray[i].draw();
-    }
-
-    requestAnimationFrame(animateSparkles);
   }
 });
