@@ -19,17 +19,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const skipBtn = document.getElementById('skip-btn');
 
   intro.addEventListener('click', startStory);
+  intro.addEventListener('touchstart', startStory, { passive: false }); // Trigger extra untuk respon sentuhan HP
 
-  function startStory() {
+  function startStory(e) {
+    if (e) e.preventDefault(); // Mencegah double trigger dari touch dan click
     if (isStoryStarted) return;
     isStoryStarted = true;
 
-    // Meminta izin layar penuh (Fullscreen) otomatis untuk HP saat user pertama nge-tap (Syarat WAJIB di browser mobile)
-    let elem = document.documentElement;
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen().catch(err => {
-        console.log("Browser menolak fullscreen otomatis", err);
-      });
+    // CROSS-BROWSER FULLSCREEN API
+    const elem = document.documentElement;
+    const requestMethod = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.webkitRequestFullScreen || elem.mozRequestFullScreen || elem.msRequestFullscreen;
+
+    if (requestMethod) {
+      try {
+        let req = requestMethod.call(elem);
+        // Tangkap error misal iOS ngeblokir karena strict mode
+        if (req && req.catch) {
+          req.catch(err => console.log("Layar penuh ditolak browser: ", err));
+        }
+      } catch (err) {
+        console.log("Ups, Fullscreen gagal: ", err);
+      }
     }
 
     // Putar musik latar saat layar pertama kali di-tap! (Dengan Transisi Halus)
