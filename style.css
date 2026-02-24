@@ -628,7 +628,59 @@ canvas#particles {
 }
 
 /* Ubah posisi agar responsif di HP */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 768px),
+screen and (max-height: 500px) {
+
+  /* --- PENYESUAIAN FONT & UKURAN TEKS --- */
+  .subtitle {
+    font-size: 1.1rem;
+    padding-bottom: 2rem;
+  }
+
+  .highlight {
+    font-size: 1.6rem !important;
+  }
+
+  .letter-text {
+    font-size: 0.95rem;
+  }
+
+  .scroll-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .title-scroll {
+    font-size: 1.1rem !important;
+  }
+
+  /* --- PERKECIL SURAT PERTAMA (SCENE 7) --- */
+  .royal-parchment {
+    width: 300px;
+    min-height: 150px;
+  }
+
+  .parchment-content {
+    padding: 3rem 1.5rem 1.5rem 1.5rem;
+  }
+
+  .parchment-flap {
+    height: 80px;
+  }
+
+  /* --- PERKECIL LILIN (SCENE 8) --- */
+  .candle-container {
+    height: 130px;
+    margin: 1rem 0;
+    transform: scale(0.8);
+  }
+
+  #blow-btn {
+    transform: scale(0.9);
+    margin-top: 10px;
+  }
+
+  /* --- POSISI BUNGA KACA DI HP --- */
   .anim-flower-container {
     opacity: 0.6;
     /* Lebih redup di HP biar teks scroll tetap kebaca jelas */
