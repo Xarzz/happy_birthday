@@ -1,4 +1,4 @@
-const CACHE_NAME = 'marsya-birthday-v1';
+const CACHE_NAME = 'marsya-birthday-v2';
 const urlsToCache = [
     './',
     './index.html',
