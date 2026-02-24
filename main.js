@@ -34,8 +34,24 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         let req = requestMethod.call(elem);
         // Tangkap error misal iOS ngeblokir karena strict mode
-        if (req && req.catch) {
-          req.catch(err => console.log("Layar penuh ditolak browser: ", err));
+        if (req && req.then) {
+          req.then(() => {
+            // Setelah berhasil masuk fullscreen, paksa hardware HP untuk diputar jadi Landscape
+            if (screen.orientation && screen.orientation.lock) {
+              screen.orientation.lock("landscape").catch(err => console.log("OS nolak lock rotasi: ", err));
+            } else if (screen.lockOrientation) {
+              screen.lockOrientation("landscape");
+            } else if (screen.mozLockOrientation) {
+              screen.mozLockOrientation("landscape");
+            } else if (screen.msLockOrientation) {
+              screen.msLockOrientation("landscape");
+            }
+          }).catch(err => console.log("Layar penuh ditolak browser: ", err));
+        } else {
+          // Fallback kalau langsung dieksekusi tanpa Promise (Browser versi lama)
+          if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock("landscape").catch(e => { });
+          }
         }
       } catch (err) {
         console.log("Ups, Fullscreen gagal: ", err);
