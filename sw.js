@@ -31,6 +31,11 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
+    // Abaikan Caching kalau lagi dibuka di Localhost (Biar CSS gak nyangkut pas ngedit)
+    if (event.request.url.includes('localhost') || event.request.url.includes('127.0.0.1')) {
+        return fetch(event.request);
+    }
+
     event.respondWith(
         caches.match(event.request)
             .then(response => {
