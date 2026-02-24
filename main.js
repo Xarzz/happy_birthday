@@ -24,6 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isStoryStarted) return;
     isStoryStarted = true;
 
+    // Meminta izin layar penuh (Fullscreen) otomatis untuk HP saat user pertama nge-tap (Syarat WAJIB di browser mobile)
+    let elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen().catch(err => {
+        console.log("Browser menolak fullscreen otomatis", err);
+      });
+    }
+
     // Putar musik latar saat layar pertama kali di-tap! (Dengan Transisi Halus)
     const bgMusic = document.getElementById('bg-music');
     if (bgMusic) {

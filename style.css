@@ -148,6 +148,9 @@ body {
   /* menggeser fokus ke atas, menghilangkan watermark di dasar laut */
   opacity: 0;
   z-index: 1;
+  /* OPTIMASI RENDER HP: Biar perpindahan gambar mulus & gak patah-patah */
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 .subtitle-box {
@@ -597,6 +600,8 @@ canvas#particles {
   pointer-events: none;
   /* Biar ngga ganggu pas narik scroll */
   animation: floatGlassFlower 5s infinite ease-in-out alternate;
+  /* GPU OPTIMIZATION */
+  will-change: transform;
 }
 
 .flower-1 {
@@ -803,163 +808,164 @@ canvas#particles {
   /* Menjulur ke kanan dari tengah batang */
   transform-origin: bottom left;
   transform: rotateZ(40deg) rotateX(20deg) scale(0.9);
+}
 
-  /* --- SHIMMERING GLOW TEXT UNTUK NAMA --- */
-  .royal-scroll .highlight {
-    position: relative;
-    color: #5a0707;
-    font-size: 2.2rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    /* Menambahkan efek kilau emas yang melintas di teks */
-    background: linear-gradient(to right,
-        #5a0707 20%,
-        #b48645 40%,
-        #ffde6a 50%,
-        #b48645 60%,
-        #5a0707 80%);
-    background-size: 200% auto;
-    color: transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-    animation: shimmerText 5s linear infinite;
+/* --- SHIMMERING GLOW TEXT UNTUK NAMA --- */
+.royal-scroll .highlight {
+  position: relative;
+  color: #5a0707;
+  font-size: 2.2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* Menambahkan efek kilau emas yang melintas di teks */
+  background: linear-gradient(to right,
+      #5a0707 20%,
+      #b48645 40%,
+      #ffde6a 50%,
+      #b48645 60%,
+      #5a0707 80%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shimmerText 5s linear infinite;
+}
+
+@keyframes shimmerText {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* --- PULSING ROLLERS GLOW --- */
+.scroll-roller {
+  animation: pulseRoller 3s infinite alternate ease-in-out;
+}
+
+@keyframes pulseRoller {
+  0% {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8), inset 0 2px 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(212, 175, 55, 0.2);
   }
 
-  @keyframes shimmerText {
-    to {
-      background-position: 200% center;
-    }
+  100% {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.9), inset 0 2px 5px rgba(255, 255, 255, 0.6), 0 0 25px rgba(212, 175, 55, 0.6);
+  }
+}
+
+/* --- MAGICAL FIREFLIES (KUNANG-KUNANG CSS) --- */
+.firefly {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: #ffde6a;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  box-shadow: 0 0 10px #ffde6a, 0 0 20px #ffde6a, 0 0 30px #d4af37;
+  animation: fireflyFloat 10s infinite linear, fireflyGlow 2s infinite alternate ease-in-out;
+}
+
+.firefly:nth-child(1) {
+  top: 80%;
+  left: 10%;
+  animation-duration: 8s, 1.5s;
+  animation-delay: 0s;
+}
+
+.firefly:nth-child(2) {
+  top: 20%;
+  left: 80%;
+  animation-duration: 12s, 2.5s;
+  animation-delay: 2s;
+}
+
+.firefly:nth-child(3) {
+  top: 50%;
+  left: 20%;
+  animation-duration: 9s, 2s;
+  animation-delay: 1s;
+}
+
+.firefly:nth-child(4) {
+  top: 90%;
+  left: 70%;
+  animation-duration: 11s, 1.8s;
+  animation-delay: 3s;
+}
+
+.firefly:nth-child(5) {
+  top: 10%;
+  left: 30%;
+  animation-duration: 13s, 2.2s;
+  animation-delay: 4s;
+}
+
+.firefly:nth-child(6) {
+  top: 60%;
+  left: 85%;
+  animation-duration: 10s, 1.9s;
+  animation-delay: 1.5s;
+}
+
+.firefly:nth-child(7) {
+  top: 40%;
+  left: 15%;
+  animation-duration: 14s, 2.1s;
+  animation-delay: 0.5s;
+}
+
+@keyframes fireflyFloat {
+  0% {
+    transform: translate(0, 0) scale(1);
   }
 
-  /* --- PULSING ROLLERS GLOW --- */
-  .scroll-roller {
-    animation: pulseRoller 3s infinite alternate ease-in-out;
+  25% {
+    transform: translate(30px, -40px) scale(1.2);
   }
 
-  @keyframes pulseRoller {
-    0% {
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8), inset 0 2px 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(212, 175, 55, 0.2);
-    }
-
-    100% {
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.9), inset 0 2px 5px rgba(255, 255, 255, 0.6), 0 0 25px rgba(212, 175, 55, 0.6);
-    }
+  50% {
+    transform: translate(-20px, -80px) scale(0.9);
   }
 
-  /* --- MAGICAL FIREFLIES (KUNANG-KUNANG CSS) --- */
-  .firefly {
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    background: #ffde6a;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 2;
-    box-shadow: 0 0 10px #ffde6a, 0 0 20px #ffde6a, 0 0 30px #d4af37;
-    animation: fireflyFloat 10s infinite linear, fireflyGlow 2s infinite alternate ease-in-out;
+  75% {
+    transform: translate(40px, -120px) scale(1.1);
   }
 
-  .firefly:nth-child(1) {
-    top: 80%;
-    left: 10%;
-    animation-duration: 8s, 1.5s;
-    animation-delay: 0s;
+  100% {
+    transform: translate(0, -160px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes fireflyGlow {
+  0% {
+    opacity: 0.3;
+    box-shadow: 0 0 5px #ffde6a;
   }
 
-  .firefly:nth-child(2) {
-    top: 20%;
-    left: 80%;
-    animation-duration: 12s, 2.5s;
-    animation-delay: 2s;
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 15px #ffde6a, 0 0 25px #d4af37;
   }
+}
 
-  .firefly:nth-child(3) {
-    top: 50%;
-    left: 20%;
-    animation-duration: 9s, 2s;
-    animation-delay: 1s;
-  }
-
-  .firefly:nth-child(4) {
-    top: 90%;
-    left: 70%;
-    animation-duration: 11s, 1.8s;
-    animation-delay: 3s;
-  }
-
-  .firefly:nth-child(5) {
-    top: 10%;
-    left: 30%;
-    animation-duration: 13s, 2.2s;
-    animation-delay: 4s;
-  }
-
-  .firefly:nth-child(6) {
-    top: 60%;
-    left: 85%;
-    animation-duration: 10s, 1.9s;
-    animation-delay: 1.5s;
-  }
-
-  .firefly:nth-child(7) {
-    top: 40%;
-    left: 15%;
-    animation-duration: 14s, 2.1s;
-    animation-delay: 0.5s;
-  }
-
-  @keyframes fireflyFloat {
-    0% {
-      transform: translate(0, 0) scale(1);
-    }
-
-    25% {
-      transform: translate(30px, -40px) scale(1.2);
-    }
-
-    50% {
-      transform: translate(-20px, -80px) scale(0.9);
-    }
-
-    75% {
-      transform: translate(40px, -120px) scale(1.1);
-    }
-
-    100% {
-      transform: translate(0, -160px) scale(1);
-      opacity: 0;
-    }
-  }
-
-  @keyframes fireflyGlow {
-    0% {
-      opacity: 0.3;
-      box-shadow: 0 0 5px #ffde6a;
-    }
-
-    100% {
-      opacity: 1;
-      box-shadow: 0 0 15px #ffde6a, 0 0 25px #d4af37;
-    }
-  }
-
-  /* ========================================================
+/* ========================================================
    FORCE LANDSCAPE OROMATIS UTK HP (PORTRAIT TO LANDSCAPE)
    ======================================================== */
-  @media screen and (orientation: portrait) {
+@media screen and (orientation: portrait) {
 
-    html,
-    body {
-      overflow: hidden !important;
-    }
-
-    #app {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      /* Putar logic dimensi: Lebar jadi Tinggi layar HP, Tinggi jadi Lebar layar HP */
-      width: 100vh;
-      height: 100vw;
-      /* Putar paksa layarnya ke samping jadi mode Landscape game! */
-      transform: translate(-50%, -50%) rotate(90deg);
-    }
+  html,
+  body {
+    overflow: hidden !important;
   }
+
+  #app {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* Putar logic dimensi: Lebar jadi Tinggi layar HP, Tinggi jadi Lebar layar HP */
+    width: 100vh;
+    height: 100vw;
+    /* Putar paksa layarnya ke samping jadi mode Landscape game! */
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+}
